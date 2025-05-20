@@ -1,0 +1,24 @@
+name: Check .gitignore
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-gitignore:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Ensure node_modules/ is ignored by .gitignore
+        run: |
+          if git check-ignore -q node_modules/; then
+            echo "✅ node_modules/ is correctly ignored by .gitignore."
+          else
+            echo "❌ node_modules/ is NOT ignored by .gitignore. Please fix it."
+            exit 1
+          fi
